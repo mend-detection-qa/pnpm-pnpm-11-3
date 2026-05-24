@@ -1,0 +1,16 @@
+{
+  "name": "pnpm-trust-lockfile-transitive-peer-deps-v11",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Probe: pnpm 11.3 trustLockfile + transitive peer dep resolution changes",
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@testing-library/react": "^14.3.1"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": ["@types/react", "@types/react-dom"]
+    }
+  }
+}
