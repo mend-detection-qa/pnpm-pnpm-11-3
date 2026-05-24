@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "pm": "pnpm",
+  "pm_version_tested": "11.3",
+  "pm_version_under_test": "11.3",
+  "source_file": "pnpm-lock.yaml",
+  "generated_at": "2026-05-24T09:06:20Z",
+  "root": {
+    "name": "pnpm-trust-lockfile-transitive-peer-deps-v11",
+    "version": "1.0.0",
+    "dependencies": [
+      "react",
+      "react-dom",
+      "@testing-library/react"
+    ]
+  },
+  "packages": {
+    "react": {
+      "version": "18.2.0",
+      "source": "registry",
+      "group": "main",
+      "optional": false,
+      "marker": null,
+      "dependencies": [
+        "loose-envify"
+      ]
+    },
+    "react-dom": {
+      "version": "18.2.0",
+      "source": "registry",
+      "source_detail": {
+        "snapshot_key": "react-dom@18.2.0(react@18.2.0)",
+        "note": "pnpm 11.3 peer-decorated snapshot key; bare name+version is the canonical identifier"
+      },
+      "group": "main",
+      "optional": false,
+      "marker": null,
+      "dependencies": [
+        "react",
+        "scheduler"
+      ]
+    },
+    "@testing-library/react": {
+      "version": "14.3.1",
+      "source": "registry",
+      "source_detail": {
+        "snapshot_key": "@testing-library/react@14.3.1(react@18.2.0)(react-dom@18.2.0(react@18.2.0))",
+        "note": "pnpm 11.3 compound peer-decorated snapshot key; Mend PnpmParserV9Impl must strip decorations"
+      },
+      "group": "main",
+      "optional": false,
+      "marker": null,
+      "dependencies": [
+        "react",
+        "react-dom"
+      ]
+    },
+    "loose-envify": {
+      "version": "1.4.0",
+      "source": "registry",
+      "group": "main",
+      "optional": false,
+      "marker": null,
+      "dependencies": [
+        "js-tokens"
+      ]
+    },
+    "js-tokens": {
+      "version": "4.0.0",
+      "source": "registry",
+      "group": "main",
+      "optional": false,
+      "marker": null,
+      "dependencies": []
+    },
+    "scheduler": {
+      "version": "0.23.2",
+      "source": "registry",
+      "group": "main",
+      "optional": false,
+      "marker": null,
+      "dependencies": [
+        "loose-envify"
+      ]
+    }
+  },
+  "warnings": [
+    "trust-lockfile=true in .npmrc does not affect Mend's lockfile-driven detection; expected tree is identical to a project without this setting",
+    "Peer-decorated snapshot keys (pnpm 11.3) are stripped to bare package name+version in this tree; original keys recorded in source_detail.snapshot_key for comparator reference"
+  ]
+}
