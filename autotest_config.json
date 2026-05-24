@@ -5,10 +5,10 @@
     "validate_scan_output": true,
     "_comment_validate_scan_output": "Whether to validate the scan output/exit code. Options: true | false. Default: true",
     "scan_output": {
-      "_security_scan_report_conclusion": "success",
+      "security_scan_report_conclusion": "success",
       "_comment_security_scan_report_conclusion": "Optional. Expected scan report conclusion. Options: 'success' | 'failure'. This validates the security scan result status. If not provided, this check will not be performed.",
       "total_libs_scanned": {
-        "gte": 4
+        "gte": 6
       },
       "_comment_total_libs_scanned": "Optional. Expected number of libraries scanned with comparison operator. Validates that the scan processed libraries. If not provided, this check will not be performed.",
       "expected_messages": [],
@@ -24,14 +24,16 @@
       "_comment_check_dependency_tree_detection_status": "Whether to check if dependency tree was successfully detected. Options: true | false. Default: true",
       "check_update_request_sca_results": true,
       "_comment_check_update_request_sca_results": "Whether to validate extraProperties.scaResults from the update request. Parses scaResults as JSON and asserts: (1) totalFail is empty {}, (2) no results entry has level 'ERROR'. Options: true | false. Default: false",
+      "check_system_paths": false,
+      "_comment_check_system_paths": "Whether to validate that every dependency (direct and transitive, recursive) has a non-empty systemPath field. Fires independently of any other flag whenever true. Options: true | false. Default: false.",
       "expected_total_dependencies_number": {
-        "gte": 3
+        "eq": 6
       },
       "expected_direct_dependencies_number": {
         "eq": 3
       },
       "expected_transitive_dependencies_number": {
-        "gte": 0
+        "eq": 3
       },
       "_comment_expected_dependencies_number": "Optional. Expected number of dependencies with comparison operator. Operators: gt (>), gte (>=), lt (<), lte (<=), eq (==). If not provided, this check will not be performed.",
       "direct_dependencies_names_list": {
@@ -60,7 +62,23 @@
       "expected_plugin_version": "",
       "_comment_agent_versions": "Optional. Expected agent and plugin versions. If not provided, this check will not be performed.",
       "validate_mend_tags": false,
-      "_comment_validate_mend_tags": "Whether to validate project tags from Mend Platform BFF API against update request extraProperties. Options: true | false. Default: false. When true, calls the BFF projects/summaries endpoint and cross-validates sourceUrl, repoId, CTX, commitId, repoFullName tags against extraProperties (owner, commitId, branchName, repository)."
+      "_comment_validate_mend_tags": "Whether to validate project tags from Mend Platform BFF API against update request extraProperties. Options: true | false. Default: false. When true, calls the BFF projects/summaries endpoint and cross-validates sourceUrl, repoId, CTX, commitId, repoFullName tags against extraProperties (owner, commitId, branchName, repository).",
+      "validate_checksums": false,
+      "_comment_validate_checksums": "Whether to validate SHA1 checksums of dependencies. Options: true | false. Default: false. When true, runs the checks configured in checksums_config.",
+      "checksums_config": {
+        "check_sha1_not_empty": false,
+        "_comment_check_sha1_not_empty": "Validate that all dependencies have non-empty sha1 and/or checksums.SHA1 fields. Catches missing SHA1 values. Options: true | false. Default: false",
+        "check_sha1_format": false,
+        "_comment_check_sha1_format": "Validate that all SHA1 values are valid 40-character lowercase hex strings. Catches malformed SHA1 values. Options: true | false. Default: false",
+        "check_sha1_consistency": false,
+        "_comment_check_sha1_consistency": "Validate that dep.sha1 matches dep.checksums.SHA1 when both are present. Catches internal inconsistencies. Options: true | false. Default: false",
+        "check_checksums_by_formula": false,
+        "_comment_check_checksums_by_formula": "Recompute SHA1/additionalSha1 using the known per-PM formula and compare against actual values. Supported types: SWIFT (groupId_commit_SWIFT / groupId_version_SWIFT), NPM/YARN (name_version_NPM), PYTHON (name_version_PYTHON), JAVA/MAVEN/GRADLE (groupId_artifactId_version_JAVA), GO (artifactId_versionOrCommit_GO), NUGET/PAKET (_NUGET), CRATE, RUBY, PHP, COCOAPODS, PUB, CABAL, HEX, OPAM, CONDA, R. Options: true | false. Default: false",
+        "expected_dependency_checksums": [],
+        "_comment_expected_dependency_checksums": "Optional. List of specific dependencies with expected SHA1 values. Each entry: {'artifactId': 'pkg-name', 'version': '1.0.0', 'expected_sha1': '<40-char-hex>', 'expected_sha1_other_platform': '<40-char-hex>'}. Version is optional (matches any version if empty). Catches SHA1 regression when scanner changes checksum computation (see TKA-10186). If not provided, this check will not be performed."
+      },
+      "expected_dependency_pairs": [],
+      "_comment_expected_dependency_pairs": "Optional. List of specific dependencies asserted as {artifactId, version} PAIRS. Each entry: {'artifactId': '<exact-string>', 'version': '<exact-string>', 'groupId': '<optional-string>'}. PM-agnostic identity check that solves the cross-PM artifactId-format problem \u2014 pip emits filename form ('urllib3-1.26.18-py2.py3-none-any.whl', contains version) while uv/poetry emit PEP 503 name only ('urllib3', no version). Single-string assertions like transitive_dependencies_names_list can't distinguish urllib3@1.26.18 from urllib3@2.7.0 on uv because the name is identical; this check binds version with artifactId so the version is load-bearing on every PM. Optional 'groupId' is validated ONLY when explicitly provided (groupId can legitimately be empty in some Mend outputs \u2014 never enforced by default). NO SHA1 involvement (use expected_dependency_checksums for hash integrity \u2014 the two checks are independent). Fires whenever the list is non-empty; no separate toggle. If not provided, this check will not be performed."
     },
     "validate_vulnerabilities_table": false,
     "_comment_validate_vulnerabilities_table": "Whether to validate the vulnerabilities table. Options: true | false. Default: true",
@@ -85,6 +103,8 @@
       "_comment_check_scanner_logs": "Whether to check scanner logs and attach them to Report Portal. Options: true | false. Default: true",
       "detect_secrets": false,
       "_comment_detect_secrets": "Whether to scan scanner logs for leaked secrets (API tokens, passwords, private keys, etc.). Options: true | false. Default: false. When true, runs TWO checks: (1) Yelp's detect-secrets (Apache 2.0, pure Python \u2014 high-entropy and keyword plugins disabled to avoid false positives on scan context-ids, temp paths, and fork-repo names; AWS/JWT/GitHub/Slack/private-key detectors remain active). (2) Claude agentic check via the Anthropic API \u2014 requires ANTHROPIC_API_KEY; if the key is missing, the SDK is not installed, or the API call fails, this sub-check is skipped with a warning (never fails the test). All found secret values are redacted (first 4 + last 4 chars) before logging; raw values never appear in output. Runs independently of validate_scanner_logs. Skipped on GHE environments.",
+      "check_external_logs": false,
+      "_comment_check_external_logs": "Whether to fetch and validate the EXTERNAL scanner log file (text format) separately from the regular scanner logs. Options: true | false. Default: false. When true, calls the existing internal/v1.0 endpoint with requestType=getScannerLogFile to retrieve the external log (the .log file referenced by `externalLogPath = /scanner-logs/external_<ctx>_<scan_ctx>.log`), keeps it isolated from the regular scanner log content, and asserts (by default) that the log contains the canonical timestamped pattern: `^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}/UTC \\[(INFO|DEBUG|WARN|ERROR)\\] [\\w.$]+ ` (date-time/UTC, log level, fully qualified Java class).",
       "expected_log_lines": [],
       "_comment_expected_log_lines": "Optional. List of log lines to validate. Each entry should have an 'operator' ('eq' substring match, 'regex' pattern match, or 'ne' substring NOT-contains) and 'value' (string or regex pattern). 'ne' is a negative assertion: validation passes when the substring is absent from every log line. Example: [{'operator': 'eq', 'value': 'Python version: 3.11'}, {'operator': 'regex', 'value': 'Python version: \\d+\\.\\d+'}, {'operator': 'ne', 'value': 'Operation succeeded engine=AI'}]. If not provided, only log attachment will be performed."
     },
