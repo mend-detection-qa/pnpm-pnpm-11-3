@@ -1,0 +1,72 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+  .:
+    dependencies:
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
+      '@testing-library/react':
+        specifier: ^14.3.1
+        version: 14.3.1(react@18.2.0)(react-dom@18.2.0(react@18.2.0))
+
+packages:
+
+  '@testing-library/react@14.3.1':
+    resolution: {integrity: sha512-E7ZDCROm/j+UxKC/MPj2F5Y2a5Q9nXXSNb9PYMalXTGePOhB/AyAmPqLMT4dHEaA+B7fGplhBaWCZ6sJLxg==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+
+  js-tokens@4.0.0:
+    resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/nQ==}
+
+  loose-envify@1.4.0:
+    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f8zsQTRtPr/31ePYkQ==}
+    hasBin: true
+
+  react-dom@18.2.0:
+    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99yXhArojM6179i/722NegKFjTZg4Mu+OQ==}
+    peerDependencies:
+      react: ^18.2.0
+
+  react@18.2.0:
+    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
+
+  scheduler@0.23.2:
+    resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvx31SHW/iwnYFkWpnGSP4/1bWd+w0VEmDL8lBMZFbZH5FEZzJoBm3OoY6jMg==}
+
+snapshots:
+
+  '@testing-library/react@14.3.1(react@18.2.0)(react-dom@18.2.0(react@18.2.0))':
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      '@babel/runtime': 7.24.7
+    optionalDependencies: {}
+
+  js-tokens@4.0.0: {}
+
+  loose-envify@1.4.0:
+    dependencies:
+      js-tokens: 4.0.0
+
+  react-dom@18.2.0(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+      scheduler: 0.23.2
+
+  react@18.2.0:
+    dependencies:
+      loose-envify: 1.4.0
+
+  scheduler@0.23.2:
+    dependencies:
+      loose-envify: 1.4.0
