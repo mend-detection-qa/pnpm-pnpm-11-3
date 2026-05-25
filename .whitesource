@@ -1,7 +1,7 @@
 {
   "scanSettings": {
     "versioning": {
-      "pnpm": ">=11.3 <12",
+      "pnpm": "11.3.0",
       "node": ">=20 <21"
     }
   }
