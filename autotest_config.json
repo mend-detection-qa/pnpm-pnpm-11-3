@@ -38,9 +38,9 @@
       "_comment_expected_dependencies_number": "Optional. Expected number of dependencies with comparison operator. Operators: gt (>), gte (>=), lt (<), lte (<=), eq (==). If not provided, this check will not be performed.",
       "direct_dependencies_names_list": {
         "eq": [
-          "@testing-library/react",
-          "react",
-          "react-dom"
+          "@testing-library/react-14.3.1.tgz",
+          "react-18.2.0.tgz",
+          "react-dom-18.2.0.tgz"
         ]
       },
       "transitive_dependencies_names_list": {
@@ -78,7 +78,7 @@
         "_comment_expected_dependency_checksums": "Optional. List of specific dependencies with expected SHA1 values. Each entry: {'artifactId': 'pkg-name', 'version': '1.0.0', 'expected_sha1': '<40-char-hex>', 'expected_sha1_other_platform': '<40-char-hex>'}. Version is optional (matches any version if empty). Catches SHA1 regression when scanner changes checksum computation (see TKA-10186). If not provided, this check will not be performed."
       },
       "expected_dependency_pairs": [],
-      "_comment_expected_dependency_pairs": "Optional. List of specific dependencies asserted as {artifactId, version} PAIRS. Each entry: {'artifactId': '<exact-string>', 'version': '<exact-string>', 'groupId': '<optional-string>'}. PM-agnostic identity check that solves the cross-PM artifactId-format problem \u2014 pip emits filename form ('urllib3-1.26.18-py2.py3-none-any.whl', contains version) while uv/poetry emit PEP 503 name only ('urllib3', no version). Single-string assertions like transitive_dependencies_names_list can't distinguish urllib3@1.26.18 from urllib3@2.7.0 on uv because the name is identical; this check binds version with artifactId so the version is load-bearing on every PM. Optional 'groupId' is validated ONLY when explicitly provided (groupId can legitimately be empty in some Mend outputs \u2014 never enforced by default). NO SHA1 involvement (use expected_dependency_checksums for hash integrity \u2014 the two checks are independent). Fires whenever the list is non-empty; no separate toggle. If not provided, this check will not be performed."
+      "_comment_expected_dependency_pairs": "Optional. List of specific dependencies asserted as {artifactId, version} PAIRS. Each entry: {'artifactId': '<exact-string>', 'version': '<exact-string>', 'groupId': '<optional-string>'}. PM-agnostic identity check that solves the cross-PM artifactId-format problem — pip emits filename form ('urllib3-1.26.18-py2.py3-none-any.whl', contains version) while uv/poetry emit PEP 503 name only ('urllib3', no version). Single-string assertions like transitive_dependencies_names_list can't distinguish urllib3@1.26.18 from urllib3@2.7.0 on uv because the name is identical; this check binds version with artifactId so the version is load-bearing on every PM. Optional 'groupId' is validated ONLY when explicitly provided (groupId can legitimately be empty in some Mend outputs — never enforced by default). NO SHA1 involvement (use expected_dependency_checksums for hash integrity — the two checks are independent). Fires whenever the list is non-empty; no separate toggle. If not provided, this check will not be performed."
     },
     "validate_vulnerabilities_table": false,
     "_comment_validate_vulnerabilities_table": "Whether to validate the vulnerabilities table. Options: true | false. Default: true",
@@ -102,7 +102,7 @@
       "check_scanner_logs": true,
       "_comment_check_scanner_logs": "Whether to check scanner logs and attach them to Report Portal. Options: true | false. Default: true",
       "detect_secrets": false,
-      "_comment_detect_secrets": "Whether to scan scanner logs for leaked secrets (API tokens, passwords, private keys, etc.). Options: true | false. Default: false. When true, runs TWO checks: (1) Yelp's detect-secrets (Apache 2.0, pure Python \u2014 high-entropy and keyword plugins disabled to avoid false positives on scan context-ids, temp paths, and fork-repo names; AWS/JWT/GitHub/Slack/private-key detectors remain active). (2) Claude agentic check via the Anthropic API \u2014 requires ANTHROPIC_API_KEY; if the key is missing, the SDK is not installed, or the API call fails, this sub-check is skipped with a warning (never fails the test). All found secret values are redacted (first 4 + last 4 chars) before logging; raw values never appear in output. Runs independently of validate_scanner_logs. Skipped on GHE environments.",
+      "_comment_detect_secrets": "Whether to scan scanner logs for leaked secrets (API tokens, passwords, private keys, etc.). Options: true | false. Default: false. When true, runs TWO checks: (1) Yelp's detect-secrets (Apache 2.0, pure Python — high-entropy and keyword plugins disabled to avoid false positives on scan context-ids, temp paths, and fork-repo names; AWS/JWT/GitHub/Slack/private-key detectors remain active). (2) Claude agentic check via the Anthropic API — requires ANTHROPIC_API_KEY; if the key is missing, the SDK is not installed, or the API call fails, this sub-check is skipped with a warning (never fails the test). All found secret values are redacted (first 4 + last 4 chars) before logging; raw values never appear in output. Runs independently of validate_scanner_logs. Skipped on GHE environments.",
       "check_external_logs": false,
       "_comment_check_external_logs": "Whether to fetch and validate the EXTERNAL scanner log file (text format) separately from the regular scanner logs. Options: true | false. Default: false. When true, calls the existing internal/v1.0 endpoint with requestType=getScannerLogFile to retrieve the external log (the .log file referenced by `externalLogPath = /scanner-logs/external_<ctx>_<scan_ctx>.log`), keeps it isolated from the regular scanner log content, and asserts (by default) that the log contains the canonical timestamped pattern: `^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}/UTC \\[(INFO|DEBUG|WARN|ERROR)\\] [\\w.$]+ ` (date-time/UTC, log level, fully qualified Java class).",
       "expected_log_lines": [],
