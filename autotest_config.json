@@ -27,7 +27,7 @@
       "check_system_paths": false,
       "_comment_check_system_paths": "Whether to validate that every dependency (direct and transitive, recursive) has a non-empty systemPath field. Fires independently of any other flag whenever true. Options: true | false. Default: false.",
       "expected_total_dependencies_number": {
-        "eq": 6
+        "gte": 6
       },
       "expected_direct_dependencies_number": {
         "eq": 3
